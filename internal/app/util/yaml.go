@@ -19,3 +19,17 @@ func GenerateFile(fileName string) error {
 	}
 	return nil
 }
+
+func LoadFile(fileName string) (model.Service, error) {
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		return model.Service{}, err
+	}
+	var service model.Service
+	err = yaml.Unmarshal(data, &service)
+	if err != nil {
+		return model.Service{}, err
+	}
+
+	return service, nil
+}

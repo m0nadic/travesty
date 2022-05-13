@@ -45,3 +45,20 @@ var initCmd = &cobra.Command{
 
 	},
 }
+
+var startCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Starts the services",
+	Long:  "Starts the mock services defined in the input files supplied as arguments",
+	Run: func(cmd *cobra.Command, args []string) {
+		for _, arg := range args {
+			fmt.Println("Starting mock service from file", arg)
+			svc, err := util.LoadFile(arg)
+			if err != nil {
+				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
+				continue
+			}
+			fmt.Println(svc)
+		}
+	},
+}

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"travesty/internal/app/model"
+	"travesty/internal/app/server"
 	"travesty/internal/app/util"
 )
 
@@ -51,6 +53,7 @@ var startCmd = &cobra.Command{
 	Short: "Starts the services",
 	Long:  "Starts the mock services defined in the input files supplied as arguments",
 	Run: func(cmd *cobra.Command, args []string) {
+		services := make([]model.Service, 0)
 		for _, arg := range args {
 			fmt.Println("Starting mock service from file", arg)
 			svc, err := util.LoadFile(arg)
@@ -58,7 +61,9 @@ var startCmd = &cobra.Command{
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				continue
 			}
-			fmt.Println(svc)
+			services = append(services, svc)
 		}
+
+		server.StartAdminServer("0.0.0.0", 3040, services)
 	},
 }

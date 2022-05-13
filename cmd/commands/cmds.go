@@ -11,7 +11,7 @@ const defaultFile = "travesty.yaml"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "displays version information",
+	Short: "Displays version information",
 	Long:  "Display version information and exit.",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("1.0.0")
@@ -20,8 +20,8 @@ var versionCmd = &cobra.Command{
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "creates a config file",
-	Long:  "Creates a new Travesty.yaml in the current folder.",
+	Short: "Creates sample config files",
+	Long:  "Creates sample config files for services in the current folder.",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) == 0 {

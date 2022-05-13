@@ -3,9 +3,8 @@ package commands
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 	"os"
-	"travesty/internal/app/model"
+	"travesty/internal/app/util"
 )
 
 const defaultFile = "travesty.yaml"
@@ -26,10 +25,8 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) == 0 {
-
 			fmt.Println("Generating", defaultFile)
-
-			err := GenerateFile(defaultFile)
+			err := util.GenerateFile(defaultFile)
 			if err != nil {
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				return
@@ -39,7 +36,7 @@ var initCmd = &cobra.Command{
 
 		for _, arg := range args {
 			fmt.Println("Generating", arg)
-			err := GenerateFile(arg)
+			err := util.GenerateFile(arg)
 			if err != nil {
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				continue
@@ -47,18 +44,4 @@ var initCmd = &cobra.Command{
 		}
 
 	},
-}
-
-func GenerateFile(fileName string) error {
-	service := model.NewSampleService()
-
-	data, err := yaml.Marshal(&service)
-	if err != nil {
-		return err
-	}
-	err = os.WriteFile(fileName, data, 0644)
-	if err != nil {
-		return err
-	}
-	return nil
 }

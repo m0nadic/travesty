@@ -6,6 +6,7 @@ import (
 	"os"
 	"travesty/internal/app/model"
 	"travesty/internal/app/server"
+	"travesty/internal/app/service"
 	"travesty/internal/app/util"
 )
 
@@ -61,6 +62,8 @@ var startCmd = &cobra.Command{
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				continue
 			}
+			spawner := service.NewSpawner()
+			spawner.Start(svc)
 			services = append(services, svc)
 		}
 

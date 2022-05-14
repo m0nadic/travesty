@@ -1,7 +1,7 @@
 package model
 
 import (
-	"log"
+	"github.com/gorilla/mux"
 	"net/http"
 	"path"
 )
@@ -16,12 +16,18 @@ type Service struct {
 	Headers        map[string]string `yaml:"headers"`
 }
 
-func (s Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method, r.URL)
-	for _, route := range s.Routes {
-		url := path.Join(s.EndpointPrefix, route.Endpoint)
-		if route.Method == r.Method && url == r.URL.String() {
-			w.Write([]byte(route.Responses[0].Body))
-		}
+func CreateHandler(response Response) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(response.StatusCode)
+		w.Write([]byte(response.Body))
 	}
+}
+
+func (s Service) CreateRouter() *mux.Router {
+	srv := mux.NewRouter()
+	for _, route := range s.Routes {
+		pattern := path.Join(s.EndpointPrefix, route.Endpoint)
+		srv.HandleFunc(pattern, CreateHandler(route.Responses[0])).Methods(route.Method)
+	}
+	return srv
 }

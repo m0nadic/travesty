@@ -21,5 +21,5 @@ func NewSpawner() Spawner {
 func (s serviceSpawner) Start(service model.Service) {
 	addr := fmt.Sprintf("%s:%d", service.Hostname, service.Port)
 	log.Printf("Starting mock service [%s] at %s", service.Name, addr)
-	go http.ListenAndServe(addr, service)
+	go http.ListenAndServe(addr, service.CreateRouter())
 }

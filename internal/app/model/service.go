@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	"path"
 )
@@ -12,7 +13,7 @@ type Service struct {
 	EndpointPrefix string            `yaml:"prefix"`
 	Port           int               `yaml:"port"`
 	Hostname       string            `yaml:"hostname"`
-	Routes         []Route           `yaml:"routes"`
+	Routes         map[string]Route  `yaml:"routes"`
 	Headers        map[string]string `yaml:"headers"`
 }
 
@@ -27,6 +28,7 @@ func (s Service) CreateRouter() *mux.Router {
 	srv := mux.NewRouter()
 	for _, route := range s.Routes {
 		pattern := path.Join(s.EndpointPrefix, route.Endpoint)
+		log.Println("adding route for", route.Method, pattern)
 		srv.HandleFunc(pattern, CreateHandler(route.Responses[0])).Methods(route.Method)
 	}
 	return srv

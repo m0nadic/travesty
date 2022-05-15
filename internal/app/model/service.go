@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"text/template"
+	"travesty/internal/app/util/functions"
 )
 
 type Service struct {
@@ -19,8 +21,11 @@ type Service struct {
 
 func CreateHandler(response Response) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.New("response")
+		tmpl.Funcs(functions.GlobalFunctions())
 		w.WriteHeader(response.StatusCode)
-		w.Write([]byte(response.Body))
+		tmpl.Parse(response.Body)
+		tmpl.Execute(w, nil)
 	}
 }
 

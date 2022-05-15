@@ -7,7 +7,7 @@ import (
 	"travesty/internal/app/model"
 	"travesty/internal/app/server"
 	"travesty/internal/app/service"
-	"travesty/internal/app/util"
+	"travesty/internal/app/util/yaml"
 )
 
 const defaultFile = "travesty.yaml"
@@ -29,7 +29,7 @@ var initCmd = &cobra.Command{
 
 		if len(args) == 0 {
 			fmt.Println("Generating", defaultFile)
-			err := util.GenerateFile(defaultFile)
+			err := yaml.GenerateFile(defaultFile)
 			if err != nil {
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				return
@@ -39,7 +39,7 @@ var initCmd = &cobra.Command{
 
 		for _, arg := range args {
 			fmt.Println("Generating", arg)
-			err := util.GenerateFile(arg)
+			err := yaml.GenerateFile(arg)
 			if err != nil {
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				continue
@@ -57,7 +57,7 @@ var startCmd = &cobra.Command{
 		services := make([]model.Service, 0)
 		for _, arg := range args {
 			fmt.Println("Starting mock service from file", arg)
-			svc, err := util.LoadFile(arg)
+			svc, err := yaml.LoadFile(arg)
 			if err != nil {
 				_, _ = fmt.Fprintln(os.Stderr, "ERROR:", err)
 				continue

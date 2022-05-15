@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path"
 	"text/template"
+	"travesty/internal/app/middleware"
 	"travesty/internal/app/util/functions"
 )
 
@@ -31,6 +32,7 @@ func CreateHandler(response Response) http.HandlerFunc {
 
 func (s Service) CreateRouter() *mux.Router {
 	srv := mux.NewRouter()
+	srv.Use(middleware.RequestLogger)
 	for _, route := range s.Routes {
 		pattern := path.Join(s.EndpointPrefix, route.Endpoint)
 		log.Println("adding route for", route.Method, pattern)

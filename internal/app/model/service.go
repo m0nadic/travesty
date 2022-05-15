@@ -33,6 +33,7 @@ func CreateHandler(response Response) http.HandlerFunc {
 func (s Service) CreateRouter() *mux.Router {
 	srv := mux.NewRouter()
 	srv.Use(middleware.RequestLogger)
+	srv.Use(middleware.GlobalHeaderInjector(s.Headers))
 	for _, route := range s.Routes {
 		pattern := path.Join(s.EndpointPrefix, route.Endpoint)
 		log.Println("adding route for", route.Method, pattern)
